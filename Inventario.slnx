@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="InventarioBack/InventarioBack.csproj" Id="9ffb6f6a-f724-4e8e-b435-e3f43898e40b" />
+  <Project Path="InventarioFront/InventarioFront.csproj" Id="3e242f3e-9b59-401c-9f43-2ad697fcd6a5" />
+  <Project Path="InventarioModelo/InventarioModelo.csproj" Id="70b542c1-2a22-489e-8ce8-c3fa119feb38" />
+</Solution>
