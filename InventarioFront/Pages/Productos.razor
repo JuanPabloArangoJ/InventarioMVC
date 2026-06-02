@@ -7,19 +7,56 @@
 
 <h3>Productos</h3>
 
+<hr />
+
+<h4>Nuevo Producto</h4>
+
+<div class="mb-3">
+    <label>Nombre</label>
+    <input class="form-control" @bind="nuevoProducto.Nombre" />
+</div>
+
+<div class="mb-3">
+    <label>Descripción</label>
+    <input class="form-control" @bind="nuevoProducto.Descripcion" />
+</div>
+
+<div class="mb-3">
+    <label>Precio</label>
+    <input class="form-control" type="number" @bind="nuevoProducto.Precio" />
+</div>
+
+@if (!editando)
+{
+    <button class="btn btn-primary"
+            @onclick="GuardarProducto">
+        Guardar
+    </button>
+}
+else
+{
+    <button class="btn btn-warning"
+            @onclick="ActualizarProducto">
+        Actualizar
+    </button>
+}
+
+<hr />
+
 @if (productos == null)
 {
     <p>Cargando...</p>
 }
 else
 {
-    <table class="table">
+    <table class="table table-striped">
         <thead>
             <tr>
                 <th>Id</th>
                 <th>Nombre</th>
                 <th>Descripción</th>
                 <th>Precio</th>
+                <th>Acción</th>
             </tr>
         </thead>
 
@@ -31,6 +68,18 @@ else
                     <td>@producto.Nombre</td>
                     <td>@producto.Descripcion</td>
                     <td>@producto.Precio</td>
+
+                    <td>
+                        <button class="btn btn-warning me-2"
+                                @onclick="() => SeleccionarProducto(producto)">
+                            Editar
+                        </button>
+
+                        <button class="btn btn-danger"
+                                @onclick="() => EliminarProducto(producto.Id)">
+                            Eliminar
+                        </button>
+                    </td>
                 </tr>
             }
         </tbody>
@@ -41,9 +90,58 @@ else
 
     private List<Producto>? productos;
 
+    private Producto nuevoProducto = new();
+
+    private bool editando = false;
+
     protected override async Task OnInitializedAsync()
     {
+        await CargarProductos();
+    }
+
+    private async Task CargarProductos()
+    {
         productos = await ProductoService.GetProductos();
+    }
+
+    private async Task GuardarProducto()
+    {
+        await ProductoService.CrearProducto(nuevoProducto);
+
+        nuevoProducto = new Producto();
+
+        await CargarProductos();
+    }
+
+    private async Task EliminarProducto(int id)
+    {
+        await ProductoService.EliminarProducto(id);
+
+        await CargarProductos();
+    }
+
+    private void SeleccionarProducto(Producto producto)
+    {
+        nuevoProducto = new Producto
+        {
+            Id = producto.Id,
+            Nombre = producto.Nombre,
+            Descripcion = producto.Descripcion,
+            Precio = producto.Precio
+        };
+
+        editando = true;
+    }
+
+    private async Task ActualizarProducto()
+    {
+        await ProductoService.ActualizarProducto(nuevoProducto);
+
+        nuevoProducto = new Producto();
+
+        editando = false;
+
+        await CargarProductos();
     }
 
 }

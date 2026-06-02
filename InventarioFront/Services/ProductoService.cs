@@ -18,4 +18,24 @@ public class ProductoService
             ("http://localhost:5221/api/Productos")
             ?? new List<Producto>();
     }
+
+    public async Task CrearProducto(Producto producto)
+    {
+        await _http.PostAsJsonAsync(
+            "http://localhost:5221/api/Productos",
+            producto);
+    }
+
+    public async Task ActualizarProducto(Producto producto)
+    {
+        await _http.PutAsJsonAsync(
+            $"http://localhost:5221/api/Productos/{producto.Id}",
+            producto);
+    }
+
+    public async Task EliminarProducto(int id)
+    {
+        await _http.DeleteAsync(
+            $"http://localhost:5221/api/Productos/{id}");
+    }
 }
